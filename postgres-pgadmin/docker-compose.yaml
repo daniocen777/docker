@@ -1,0 +1,32 @@
+version: '3'
+
+# comando => docker compose up
+# Servicios o contenedores
+services:
+  # nombre cualquiera para el contenedor
+  db:
+    image: postgres:14.10
+    container_name: postgres-database
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=123456
+
+  pgAdmin:
+    depends_on:
+      - db
+    image: dpage/pgadmin4:6.17
+    ports:
+      - "8080:80"
+    environment:
+      - PGADMIN_DEFAULT_PASSWORD=123456
+      - PGADMIN_DEFAULT_EMAIL=superman@google.com
+# Docker crea nuevo volumen con nombre <nombre-carpeta>_<nombre-volumen> (postgres-pgadmin_postgres-db)
+# volumes:
+  #postgres-db:
+
+# Asignar a volumen existente
+# Cuando se hace un cambio, se encesita limpiar => docker compose down
+volumes:
+  postgres-db:
+    external: true
