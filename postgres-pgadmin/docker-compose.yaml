@@ -8,9 +8,15 @@ services:
     image: postgres:14.10
     container_name: postgres-database
     volumes:
-      - postgres-db:/var/lib/postgresql/data
+      # Volumen interno
+      # - postgres-db:/var/lib/postgresql/data
+      # Volumen dentro de pc (carpetas postgres)
+      - ./postgres:/var/lib/postgresql/data
     environment:
       - POSTGRES_PASSWORD=123456
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-database:5432/mydb
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=123456
 
   pgAdmin:
     depends_on:
@@ -18,15 +24,18 @@ services:
     image: dpage/pgadmin4:6.17
     ports:
       - "8080:80"
+    volumes:
+      # PgAdmin4 en una carpeta
+      - ./pgadmin:/var/lib/pgadmin
     environment:
       - PGADMIN_DEFAULT_PASSWORD=123456
       - PGADMIN_DEFAULT_EMAIL=superman@google.com
-# Docker crea nuevo volumen con nombre <nombre-carpeta>_<nombre-volumen> (postgres-pgadmin_postgres-db)
-# volumes:
+  # Docker crea nuevo volumen con nombre <nombre-carpeta>_<nombre-volumen> (postgres-pgadmin_postgres-db)
+  # volumes:
   #postgres-db:
 
-# Asignar a volumen existente
-# Cuando se hace un cambio, se encesita limpiar => docker compose down
-volumes:
-  postgres-db:
-    external: true
+  # Asignar a volumen existente
+  # Cuando se hace un cambio, se encesita limpiar => docker compose down
+  #volumes:
+  #  postgres-db:
+  #    external: true
