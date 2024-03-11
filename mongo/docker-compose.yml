@@ -6,14 +6,14 @@ services:
     image: mongo:6.0
     volumes:
       - mongo-vol:/data/db
-    # ports:
-    # - 27017:27017
+    ports:
+      - 27017:27017
     restart: always
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
     # Ejecutar comando luego de levantar imagen (documentacion mongo)
-    command: ['--auth']
+    command: [ '--auth' ]
   # Visor de la DB
   mongo-express:
     depends_on:
