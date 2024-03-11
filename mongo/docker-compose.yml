@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  db_mongo:
+    container_name: ${MONGO_DB_NAME}
+    image: mongo:6.0
+    volumes:
+      - mongo-vol:/data/db
+    # ports:
+    # - 27017:27017
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+    # Ejecutar comando luego de levantar imagen (documentacion mongo)
+    command: ['--auth']
+  # Visor de la DB
+  mongo-express:
+    depends_on:
+      - db_mongo
+    image: mongo-express:1.0.0-alpha.4
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=${MONGO_USERNAME}
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=${MONGO_PASSWORD}
+      - ME_CONFIG_MONGODB_SERVER=${MONGO_DB_NAME}
+    ports:
+      - 8080:8081
+    restart: always
+
+volumes:
+  mongo-vol:
+    external: false
